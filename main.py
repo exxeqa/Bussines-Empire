@@ -6,9 +6,9 @@ crypto = {}
 businesses = {}
 
 stocks_market = {
-    "Apple": 150,
-    "Tesla": 250,
-    "Microsoft": 400
+    1: ("Apple", 150),
+    2: ("Tesla", 250),
+    3: ("Microsoft", 400)
 }
 
 def clear():
@@ -18,25 +18,53 @@ def bal_check():
     print(f"Ваш баланс: ${balance}")
 
 def stock_check():
-    print(f"Акции {stocks}\nКриптовалюта {crypto}\nБизнесы {businesses}")
+    for key, value in stocks.items():
+        print(f"Акция: {key}, количество: {value}")
+    for key, value in crypto.items():
+        print(f"Криптовалюта: {key}, количество: {value}")
+    for key, value in businesses.items():
+        print(f"Бизнес: {key}, количество: {value}")
 
 def stock_market():
+    global balance
     x = 1
     print(f"{"=" * 24}\n{" " * 6}STOCK MARKET{" " * 6}\n{"=" * 24}\n\nБаланс: ${balance}")
-    for key, value in stocks_market.items():
-        print(f"{x}. {key}  ${value} ")
+    for i in range(len(stocks_market)):
+        name, price = stocks_market[x]
+        print(f"{x}. {name}  ${price} ")
         x += 1
     x -= 1
     while True:
         try:
-            choose = int(input(f"Выберите акцию 1-{x}: "))
-            if choose > x:
-                print(f"Please choose between 1-{x}")
+            user_input = int(input(f"Выберите акцию для покупки 1-{x}: "))
+            if user_input <= x:
+                name, price = stocks_market[user_input]
+                break
+            else:
+                print(f"Выберите акцию 1-{x}")
+                continue
+        except ValueError:
+            print("Введите число!")
+            continue
+    print(f"{name} - ${price}")
+    bal_check()
+    while True:
+        try:
+            buy_am = int(input("Сколько акций купить: "))
+            if buy_am * price > balance:
+                print("Недостаточно средств")
                 continue
             else:
+                balance -= buy_am * price
+                print("Покупка успешна!")
+                print(f"Куплено: {buy_am} {name}\nПотрачено ${buy_am * price}\nБаланс: {balance}$ ")
+                if name in stocks:
+                    stocks[name] += buy_am
+                else:
+                    stocks[name] = buy_am
                 break
         except ValueError:
-            print("Enter number!")
+            print("Введите число!")
             continue
 
 def menu():
