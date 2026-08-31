@@ -69,6 +69,7 @@ def buy_stock():
             print("Enter number!")
             continue
         if mode == 1:
+            clear()
             stocks_for()
             try:
                 buy_am = int(input("Сколько акций купить: "))
@@ -80,6 +81,7 @@ def buy_stock():
                 print("Недостаточно средств")
                 continue
             else:
+                clear()
                 balance -= buy_am * price
                 print("Покупка успешна!")
                 print(f"Куплено: {buy_am} {name}\nПотрачено ${buy_am * price}\nБаланс: {balance}$ ")
@@ -89,10 +91,12 @@ def buy_stock():
                     stocks[name] = buy_am
                 break
         elif mode == 2:
+            clear()
             stock_market()
             break
 
 def sell_print():
+    clear()
     try:
         amout_s = stocks[name]
         print(f"Продано: {sell_am} {name}\nПолучено: {sell_am * price}$\nБаланс {balance}$\nОсталось акций {amout_s}")
@@ -126,12 +130,14 @@ def sell_stock():
                     if amout - sell_am == 0:
                         del stocks[name]
                         balance += sell_am * price
-                        stock_market()
+                        sell_print()
+                        menu()
                         break
                     else:
                         stocks[name] -= sell_am
                         balance += sell_am * price
-                        stock_market()
+                        sell_print()
+                        menu()
                         break
         else:
             print(f"Вы не владеете акциями {name}")
@@ -148,9 +154,11 @@ def stock_market():
             print("Enter number!")
             continue
         if mode == 1:
+            clear()
             buy_stock()
             break
         elif mode == 2:
+            clear()
             sell_stock()
             break
         elif mode == 3:
