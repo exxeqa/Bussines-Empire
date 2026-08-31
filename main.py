@@ -33,11 +33,49 @@ def stock_have_check(name):
         have_stock = False
     return have_stock
 
+def stocks_for():
+    global price, buy_am, name
+    x = 1
+    print(f"{"=" * 24}\n{" " * 6}STOCK MARKET{" " * 6}\n{"=" * 24}\n\nБаланс: ${balance}")
+    for i in range(len(stocks_market)):
+        name, price = stocks_market[x]
+        print(f"{x}. {name}  ${price} ")
+        x += 1
+    x -= 1
+    while True:
+        try:
+            user_input = int(input(f"Выберите акцию 1-{x}: "))
+            if user_input <= x:
+                name, price = stocks_market[user_input]
+                break
+            else:
+                print(f"Выберите акцию 1-{x}")
+                continue
+        except ValueError:
+            print("Введите число!")
+            continue
+    clear()
+    print(f"Вы выбрали {name} - ${price}")
+    bal_check()
+
 def buy_stock():
     global balance, price, buy_am, name
     while True:
         try:
-            buy_am = int(input("Сколько акций купить: "))
+            mode = int(input("1. Купить акции\n2. Вернуться назад "))
+            pass
+        except ValueError:
+            clear()
+            print("Enter number!")
+            continue
+        if mode == 1:
+            stocks_for()
+            try:
+                buy_am = int(input("Сколько акций купить: "))
+                pass
+            except ValueError:
+                print("Введите число!")
+                continue
             if buy_am * price > balance:
                 print("Недостаточно средств")
                 continue
@@ -50,9 +88,9 @@ def buy_stock():
                 else:
                     stocks[name] = buy_am
                 break
-        except ValueError:
-            print("Введите число!")
-            continue
+        elif mode == 2:
+            stock_market()
+            break
 
 def sell_print():
     try:
@@ -65,6 +103,7 @@ def sell_stock():
     while True:
         global sell_am, balance
         if stock_have_check(name) == True:
+            stocks_for()
             amout = stocks[name]
             while True:
                 try:
@@ -86,13 +125,13 @@ def sell_stock():
                 else:
                     if amout - sell_am == 0:
                         del stocks[name]
-                        balance += sell_am * price * 1.1
-                        sell_print()
+                        balance += sell_am * price
+                        stock_market()
                         break
                     else:
-                        stocks[name] = sell_am
-                        balance += sell_am * price * 1.1
-                        sell_print()
+                        stocks[name] -= sell_am
+                        balance += sell_am * price
+                        stock_market()
                         break
         else:
             print(f"Вы не владеете акциями {name}")
@@ -100,27 +139,6 @@ def sell_stock():
 
 def stock_market():
     global balance, price, buy_am, name
-    x = 1
-    print(f"{"=" * 24}\n{" " * 6}STOCK MARKET{" " * 6}\n{"=" * 24}\n\nБаланс: ${balance}")
-    for i in range(len(stocks_market)):
-        name, price = stocks_market[x]
-        print(f"{x}. {name}  ${price} ")
-        x += 1
-    x -= 1
-    while True:
-        try:
-            user_input = int(input(f"Выберите интересующую вас акцию 1-{x}: "))
-            if user_input <= x:
-                name, price = stocks_market[user_input]
-                break
-            else:
-                print(f"Выберите акцию 1-{x}")
-                continue
-        except ValueError:
-            print("Введите число!")
-            continue
-    print(f"{name} - ${price}")
-    bal_check()
     while True:
         try:
             mode = int(input("Выберите режим\n1. Купить акции\n2. Продать акции\n3. Назад"))
@@ -134,6 +152,7 @@ def stock_market():
             break
         elif mode == 2:
             sell_stock()
+            break
         elif mode == 3:
             break
         else:
